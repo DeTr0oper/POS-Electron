@@ -76,6 +76,35 @@ body {
     box-shadow: var(--card-shadow);
 }
 
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back-btn {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    height: 42px;
+    width: 42px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    color: var(--text-dark);
+    box-shadow: var(--card-shadow);
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.back-btn:hover {
+    background: var(--primary-blue);
+    color: white;
+    transform: translateY(-1px);
+}
+
 /* Main 3-column layout */
 .main-content {
     display: grid;
@@ -374,5 +403,10 @@ body {
     .search-bar,
     .search-bar input {
         width: 100%;
+    }
+
+    .top-actions {
+        width: 100%;
+        justify-content: space-between;
     }
 }
