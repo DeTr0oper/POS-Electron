@@ -17,6 +17,7 @@ function showPermissionModal() {
         return;
     }
 
+    permissionModalOverlay.classList.remove('is-closing');
     permissionModalOverlay.hidden = false;
 }
 
@@ -25,7 +26,7 @@ function hidePermissionModal() {
         return;
     }
 
-    permissionModalOverlay.hidden = true;
+    permissionModalOverlay.classList.add('is-closing');
 }
 
 function syncDashboardAccess() {
@@ -79,6 +80,16 @@ permissionModalCloseBtn?.addEventListener('click', hidePermissionModal);
 permissionModalOverlay?.addEventListener('click', (event) => {
     if (event.target === permissionModalOverlay) {
         hidePermissionModal();
+    }
+});
+
+permissionModalOverlay?.addEventListener('animationend', (event) => {
+    if (
+        event.animationName === 'modal-overlay-out' &&
+        permissionModalOverlay.classList.contains('is-closing')
+    ) {
+        permissionModalOverlay.hidden = true;
+        permissionModalOverlay.classList.remove('is-closing');
     }
 });
 

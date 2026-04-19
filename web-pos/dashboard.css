@@ -15,14 +15,14 @@
 
 @font-face {
     font-family: 'Neue Kabel';
-    src: url('../font/NeueKabel-BTUulivP.ttf') format('truetype');
+    src: url('./font/NeueKabel-BTUulivP.ttf') format('truetype');
     font-weight: 900;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Google Sans';
-    src: url('../font/GoogleSans-DGRbB7N7.ttf') format('truetype');
+    src: url('./font/GoogleSans-DGRbB7N7.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
@@ -52,7 +52,7 @@ h1, h2, h3, h4, h5, h6,
 .stat-value,
 .permission-modal h2,
 .permission-modal-button {
-    font-family: 'Neue Kabel', 'Google Sans', sans-serif;
+    font-family: 'Neue Kabel', 'Google Sans', sans-serif !important;
 }
 
 .dashboard-wrap {
@@ -285,6 +285,7 @@ h1, h2, h3, h4, h5, h6,
     place-items: center;
     padding: 20px;
     z-index: 1000;
+    animation: modal-overlay-in 0.2s ease-out;
 }
 
 .permission-modal {
@@ -294,6 +295,38 @@ h1, h2, h3, h4, h5, h6,
     padding: 28px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
     text-align: left;
+    transform: translateY(0) scale(1);
+    animation: modal-panel-in 0.24s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.permission-modal-overlay.is-closing {
+    animation: modal-overlay-out 0.2s ease-in forwards;
+}
+
+.permission-modal-overlay.is-closing .permission-modal {
+    animation: modal-panel-out 0.24s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+
+.permission-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.permission-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: #ea8680;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+
+.permission-modal-icon svg {
+    width: 28px;
+    height: 28px;
 }
 
 .permission-modal h2 {
@@ -327,12 +360,67 @@ h1, h2, h3, h4, h5, h6,
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    transform: translateY(0) scale(1);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
 }
 
 .permission-modal-button:hover {
     opacity: 0.92;
+    transform: translateY(-1px) scale(1.01);
+}
+
+.permission-modal-button:active {
+    transform: translateY(1px) scale(0.98);
 }
 
 .permission-modal-overlay[hidden] {
     display: none;
+}
+
+@keyframes modal-overlay-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modal-panel-in {
+    0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+    70% {
+        opacity: 1;
+        transform: translateY(-1px) scale(1.005);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes modal-overlay-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes modal-panel-out {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    30% {
+        opacity: 1;
+        transform: translateY(-1px) scale(1.005);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
 }

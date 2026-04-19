@@ -17,7 +17,7 @@
 }
 
 body {
-    font-family: 'Inter', 'Prompt', sans-serif;
+    font-family: 'Google Sans', 'Inter', 'Prompt', sans-serif;
     background-color: var(--bg-light-blue);
     color: var(--text-dark);
     min-height: 100vh;

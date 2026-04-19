@@ -63,9 +63,11 @@ async function logOut() {
 function fillUserHeader(user, role) {
     const nameEl = document.getElementById('userName');
     const metaEl = document.getElementById('userMeta');
+    const rawName = user.displayName || user.email || 'Signed in user';
+    const upperName = String(rawName).toUpperCase();
 
     if (nameEl) {
-        nameEl.textContent = user.displayName || user.email || 'Signed in user';
+        nameEl.textContent = `WELCOME BACK, ${upperName}`;
     }
 
     if (metaEl) {

@@ -1,15 +1,17 @@
 @font-face {
     font-family: 'Neue Kabel';
-    src: url('../font/NeueKabel-BTUulivP.ttf') format('truetype');
+    src: url('./font/NeueKabel-BTUulivP.ttf') format('truetype');
     font-weight: 900;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Google Sans';
-    src: url('../font/GoogleSans-DGRbB7N7.ttf') format('truetype');
+    src: url('./font/GoogleSans-DGRbB7N7.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 :root {
@@ -18,11 +20,11 @@
 }
 
 html, body {
-    font-family: var(--app-body-font);
+    font-family: var(--app-body-font) !important;
 }
 
 body, button, input, select, textarea {
-    font-family: var(--app-body-font);
+    font-family: var(--app-body-font) !important;
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -44,5 +46,5 @@ h1, h2, h3, h4, h5, h6,
 .permission-modal h2,
 .permission-modal-button,
 .back-btn {
-    font-family: var(--app-header-font);
+    font-family: var(--app-header-font) !important;
 }
