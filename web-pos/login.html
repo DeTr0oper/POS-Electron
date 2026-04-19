@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otterton's Point of Sale | Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --bg-light-blue: #E7F3FF;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --card-radius: 24px;
+            --border: #dbe7f3;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Prompt', sans-serif;
+            min-height: 100vh;
+            color: var(--text-dark);
+            background:
+                radial-gradient(circle at top left, rgba(0, 123, 255, 0.18), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.14), transparent 38%),
+                var(--bg-light-blue);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .auth-shell {
+            width: min(960px, 100%);
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 18px;
+        }
+
+        .hero, .panel {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(12px);
+            border: 1px solid white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+        }
+
+        .hero {
+            padding: 34px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 560px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-mark {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: white;
+            display: grid;
+            place-items: center;
+            color: var(--primary-blue);
+            box-shadow: var(--card-shadow);
+        }
+
+        .hero h1 {
+            margin: 18px 0 10px;
+            font-size: clamp(2rem, 4vw, 3.3rem);
+            line-height: 1.02;
+        }
+
+        .hero p {
+            margin: 0;
+            color: var(--text-muted);
+            max-width: 36ch;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .feature {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #e7f3ff;
+            color: var(--primary-blue);
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+        }
+
+        .feature strong { display: block; margin-bottom: 2px; }
+        .feature span { color: var(--text-muted); font-size: 0.92rem; }
+
+        .panel {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .panel h2 {
+            margin: 0 0 8px;
+            font-size: 1.55rem;
+        }
+
+        .panel .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 22px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0 18px;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .remember-row input { width: 18px; height: 18px; }
+
+        .login-btn {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 14px 16px;
+            background: var(--primary-blue);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .login-btn:hover { transform: translateY(-1px); opacity: 0.95; }
+        .login-btn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+        .status {
+            min-height: 22px;
+            margin-top: 14px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .fineprint {
+            margin-top: 18px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 860px) {
+            .auth-shell { grid-template-columns: 1fr; }
+            .hero { min-height: unset; }
+        }
+    </style>
+</head>
+<body data-page="login">
+    <div class="auth-shell">
+        <section class="hero">
+            <div>
+                <div class="brand">
+                    <div class="brand-mark"><i data-lucide="store"></i></div>
+                    <div>
+                        <div style="font-weight:700; font-size:1.02rem;">Otterton's Point of Sale</div>
+                        <div style="color:var(--text-muted); font-size:0.9rem;">Secure access for staff</div>
+                    </div>
+                </div>
+
+                <h1>Sign in to manage sales, stock, and receipts.</h1>
+                <p>Use Google login to access the dashboard, POS, stock management, and receipt editor. Your session can be remembered on this device if you choose to keep you signed in.</p>
+
+                <div class="feature-list">
+                    <div class="feature">
+                        <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+                        <div><strong>Protected access</strong><span>Only authenticated users can read or edit app data.</span></div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"><i data-lucide="refresh-cw"></i></div>
+                        <div><strong>Remember me</strong><span>Choose local persistence for long-lived sign-in on this device.</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>Welcome back</h2>
+            <div class="subtitle">Sign in with Google to continue.</div>
+
+            <label class="remember-row">
+                <input type="checkbox" id="rememberMe" checked>
+                <span>Remember me on this device</span>
+            </label>
+
+            <button class="login-btn" id="googleLoginBtn" type="button">
+                <i data-lucide="chrome"></i>
+                <span>Sign in with Google</span>
+            </button>
+
+            <div class="status" id="loginStatus">Ready to sign in.</div>
+            <div class="fineprint">Firestore access is restricted to authenticated users. If you are not signed in, you will be redirected here automatically.</div>
+        </section>
+    </div>
+
+    <script type="module" src="auth.js"></script>
+    <script>
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

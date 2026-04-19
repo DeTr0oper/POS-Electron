@@ -71,8 +71,3 @@ document.getElementById('stockLink').addEventListener('click', () => {
     // Navigate to the Stock page
     window.location.href = 'stock.html';
 });
-
-// Logout Mock (For demo)
-document.querySelector('.logout-btn').addEventListener('click', () => {
-    alert('Logging out...');
-});
