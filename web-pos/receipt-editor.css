@@ -310,6 +310,10 @@ body {
     font-family: 'Neue Kabel', 'Google Sans', sans-serif;
 }
 
+.receipt-preview #previewAddress {
+    white-space: pre-line;
+}
+
 .receipt-preview .rp-divider {
     border-top: 1px dashed #ccc;
     margin: 6px 0;
