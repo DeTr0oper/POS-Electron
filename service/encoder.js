@@ -35,26 +35,45 @@ function encodeThaiTis620(text) {
       continue;
     }
 
+<<<<<<< HEAD
     throw new ServiceError(
       "ENCODING_FAILED",
       `Unsupported character for Thai 255 text encoding: "${char}"`
     );
+=======
+    throw new ServiceError("ENCODING_FAILED", `Unsupported character for Thai 255 text encoding: "${char}"`, 400);
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
   }
 
   return Buffer.from(bytes);
 }
 
+<<<<<<< HEAD
 function toLine(text = "") {
   const value = String(text);
   if (value.length <= MAX_LINE_WIDTH) {
     return value;
   }
   return value.slice(0, MAX_LINE_WIDTH);
+=======
+function wrapLine(text = "") {
+  const value = String(text || "");
+  if (value.length <= MAX_LINE_WIDTH) {
+    return [value];
+  }
+
+  const lines = [];
+  for (let index = 0; index < value.length; index += MAX_LINE_WIDTH) {
+    lines.push(value.slice(index, index + MAX_LINE_WIDTH));
+  }
+  return lines;
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 }
 
 function padLine(left, right) {
   const safeLeft = String(left || "");
   const safeRight = String(right || "");
+<<<<<<< HEAD
   const available = Math.max(1, MAX_LINE_WIDTH - safeRight.length);
   const clippedLeft = safeLeft.length > available ? safeLeft.slice(0, available) : safeLeft;
   return clippedLeft + " ".repeat(Math.max(1, MAX_LINE_WIDTH - clippedLeft.length - safeRight.length)) + safeRight;
@@ -63,6 +82,14 @@ function padLine(left, right) {
 function pushLine(chunks, text) {
   chunks.push(encodeThaiTis620(toLine(text)));
   chunks.push(Buffer.from([0x0a]));
+=======
+
+  if (safeLeft.length + safeRight.length >= MAX_LINE_WIDTH) {
+    return safeLeft.slice(0, Math.max(1, MAX_LINE_WIDTH - safeRight.length - 1)) + " " + safeRight;
+  }
+
+  return safeLeft + " ".repeat(MAX_LINE_WIDTH - safeLeft.length - safeRight.length) + safeRight;
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 }
 
 function pushAlign(chunks, align) {
@@ -70,6 +97,16 @@ function pushAlign(chunks, align) {
   chunks.push(Buffer.from([ESC, 0x61, mode]));
 }
 
+<<<<<<< HEAD
+=======
+function pushTextLine(chunks, text) {
+  for (const line of wrapLine(text)) {
+    chunks.push(encodeThaiTis620(line));
+    chunks.push(Buffer.from([0x0a]));
+  }
+}
+
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 function buildReceiptBuffer(payload) {
   const chunks = [];
 
@@ -77,6 +114,7 @@ function buildReceiptBuffer(payload) {
   chunks.push(Buffer.from([ESC, 0x74, 0xff]));
 
   pushAlign(chunks, "center");
+<<<<<<< HEAD
   pushLine(chunks, payload.storeName);
   if (payload.receiptId) {
     pushLine(chunks, `Receipt: ${payload.receiptId}`);
@@ -115,6 +153,56 @@ function buildReceiptBuffer(payload) {
     pushLine(chunks, "-".repeat(MAX_LINE_WIDTH));
     pushAlign(chunks, "center");
     pushLine(chunks, payload.footer);
+=======
+  pushTextLine(chunks, payload.storeName);
+
+  if (payload.address) {
+    pushTextLine(chunks, payload.address);
+  }
+
+  if (payload.phone) {
+    pushTextLine(chunks, `Tel: ${payload.phone}`);
+  }
+
+  if (payload.receiptId) {
+    pushTextLine(chunks, `Receipt: ${payload.receiptId}`);
+  }
+
+  pushTextLine(chunks, payload.date);
+
+  pushAlign(chunks, "left");
+  pushTextLine(chunks, "-".repeat(MAX_LINE_WIDTH));
+
+  for (const item of payload.items) {
+    pushTextLine(chunks, `${item.qty} ${item.name}`);
+    pushTextLine(chunks, padLine("", item.price));
+  }
+
+  pushTextLine(chunks, "-".repeat(MAX_LINE_WIDTH));
+
+  if (payload.subtotal) {
+    pushTextLine(chunks, padLine("Subtotal", payload.subtotal));
+  }
+
+  if (payload.tax) {
+    pushTextLine(chunks, padLine("Tax", payload.tax));
+  }
+
+  pushTextLine(chunks, padLine("Total", payload.total));
+
+  if (payload.cash) {
+    pushTextLine(chunks, padLine("Cash", payload.cash));
+  }
+
+  if (payload.change) {
+    pushTextLine(chunks, padLine("Change", payload.change));
+  }
+
+  if (payload.footer) {
+    pushTextLine(chunks, "-".repeat(MAX_LINE_WIDTH));
+    pushAlign(chunks, "center");
+    pushTextLine(chunks, payload.footer);
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
   }
 
   chunks.push(Buffer.from([ESC, 0x64, 0x03]));
@@ -127,11 +215,21 @@ function buildTestPrintBuffer() {
   return buildReceiptBuffer({
     receiptId: "TEST-255",
     storeName: "Vozy P50 Thai Test",
+<<<<<<< HEAD
     date: new Date().toLocaleString("th-TH"),
     items: [
       { qty: "1x", name: "ทดสอบภาษาไทย", price: "0.00" },
       { qty: "1x", name: "ชาไทย 55.00", price: "55.00" },
       { qty: "1x", name: "กาแฟเย็น 65.00", price: "65.00" }
+=======
+    address: "Silent Print Service",
+    phone: "000-000-0000",
+    date: new Date().toLocaleString("th-TH"),
+    items: [
+      { qty: "1x", name: "ทดสอบภาษาไทย", price: "0.00" },
+      { qty: "1x", name: "ชาไทย", price: "55.00" },
+      { qty: "1x", name: "กาแฟเย็น", price: "65.00" }
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
     ],
     subtotal: "120.00",
     tax: "0.00",

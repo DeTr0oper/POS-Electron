@@ -2,20 +2,44 @@ import { app } from "./firebase-init.js";
 import {
     getFirestore,
     doc,
+<<<<<<< HEAD
+=======
+    getDoc,
+    setDoc,
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
     collection,
     onSnapshot,
     runTransaction,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+<<<<<<< HEAD
 console.log("POS App v1.3 - Silent print checkout mode");
+=======
+console.log("POS App v1.4 - Silent print + receipts");
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 
 const db = getFirestore(app);
 
 const PRINT_SERVICE_URL = "http://127.0.0.1:3011";
 const SERVICE_POLL_INTERVAL_MS = 5000;
+<<<<<<< HEAD
 const DEFAULT_STORE_NAME = "Otterton's Point of Sale";
 const DEFAULT_FOOTER = "ขอบคุณที่ใช้บริการ";
+=======
+
+let receiptSettings = {
+    storeName: "Otterton's Point of Sale (Loading...)",
+    address: "---",
+    phone: "---",
+    footer: "---",
+    fontSize: 13,
+    storeNameFontSize: 16,
+    storeNameAlign: "center",
+    addressFontSize: 11,
+    addressAlign: "center"
+};
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 
 const FALLBACK_PRODUCTS = [
     { id: "local-1", name: "Iced Americano", price: 65, category: "coffee", img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&q=80&w=200", stockQty: 99, reorderLevel: 5 },
@@ -31,6 +55,10 @@ let cart = [];
 let currentCategory = "coffee";
 let serviceReady = false;
 let saleInFlight = false;
+<<<<<<< HEAD
+=======
+let pendingPrintedSale = null;
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 
 const productGrid = document.getElementById("productGrid");
 const cartList = document.getElementById("cartList");
@@ -43,6 +71,10 @@ const serviceStatusText = serviceStatus?.querySelector(".service-status-text");
 const checkoutNote = document.getElementById("checkoutNote");
 
 async function init() {
+<<<<<<< HEAD
+=======
+    await loadReceiptSettings();
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
     startProductSync();
 
     renderProducts();
@@ -94,11 +126,18 @@ async function refreshPrintServiceStatus() {
         serviceReady = Boolean(result.success);
 
         if (serviceReady) {
+<<<<<<< HEAD
             setServiceStatus(
                 "ready",
                 "Print Service Ready",
                 `Ready to print via ${result.printerName || "configured printer"}.`
             );
+=======
+            const note = pendingPrintedSale
+                ? `Receipt ${pendingPrintedSale.receiptId} already printed. Finish saving the sale.`
+                : `Ready to print via ${result.printerName || "configured printer"}.`;
+            setServiceStatus("ready", "Print Service Ready", note);
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
         } else {
             setServiceStatus(
                 "offline",
@@ -116,6 +155,20 @@ async function refreshPrintServiceStatus() {
     } finally {
         updateCartUI();
     }
+<<<<<<< HEAD
+=======
+}
+
+async function loadReceiptSettings() {
+    try {
+        const snap = await getDoc(doc(db, "settings", "receipt"));
+        if (snap.exists()) {
+            receiptSettings = { ...receiptSettings, ...snap.data() };
+        }
+    } catch (error) {
+        console.warn("Could not load receipt settings:", error);
+    }
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 }
 
 function startProductSync() {
@@ -253,21 +306,68 @@ function updateCartUI() {
     taxEl.innerText = tax.toFixed(2);
     totalEl.innerText = total.toFixed(2);
 
+<<<<<<< HEAD
     checkoutBtn.disabled = cart.length === 0 || saleInFlight || !serviceReady;
 }
 
 function buildReceiptPayload() {
+=======
+    checkoutBtn.disabled = (cart.length === 0 && !pendingPrintedSale) || saleInFlight || !serviceReady;
+}
+
+function getBusinessDateKey(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}${month}${day}`;
+}
+
+async function reserveReceiptId() {
+    const businessDate = getBusinessDateKey();
+    const counterRef = doc(db, "receiptCounters", businessDate);
+
+    return runTransaction(db, async (transaction) => {
+        const snap = await transaction.get(counterRef);
+        const currentSequence = snap.exists() ? Math.max(0, Number(snap.data().lastSequence) || 0) : 0;
+        const nextSequence = currentSequence + 1;
+
+        transaction.set(counterRef, {
+            businessDate,
+            lastSequence: nextSequence,
+            updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        return `${businessDate}-${String(nextSequence).padStart(4, "0")}`;
+    });
+}
+
+function buildReceiptPayload(receiptId) {
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
     const subtotal = subtotalEl.innerText;
     const tax = taxEl.innerText;
     const total = totalEl.innerText;
     const now = new Date();
 
     return {
+<<<<<<< HEAD
         storeName: DEFAULT_STORE_NAME,
         date: `${now.toLocaleDateString("th-TH")} ${now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}`,
         items: cart.map((item) => ({
             qty: `${item.qty}x`,
             name: item.name,
+=======
+        receiptId,
+        storeName: receiptSettings.storeName || "Otterton's Point of Sale",
+        address: receiptSettings.address || "",
+        phone: receiptSettings.phone || "",
+        date: `${now.toLocaleDateString("th-TH")} ${now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}`,
+        items: cart.map((item) => ({
+            productId: item.id,
+            qty: `${item.qty}x`,
+            quantity: item.qty,
+            name: item.name,
+            unitPrice: item.price.toFixed(2),
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
             price: (item.price * item.qty).toFixed(2)
         })),
         subtotal,
@@ -275,7 +375,11 @@ function buildReceiptPayload() {
         total,
         cash: total,
         change: "0.00",
+<<<<<<< HEAD
         footer: DEFAULT_FOOTER
+=======
+        footer: receiptSettings.footer || "---"
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
     };
 }
 
@@ -294,6 +398,59 @@ async function sendPrintRequest(payload) {
     }
 }
 
+<<<<<<< HEAD
+=======
+function getAuthSnapshot() {
+    const state = window.webPosAuthState || {};
+    return {
+        uid: state.user?.uid || "",
+        email: state.user?.email || "",
+        role: state.role || ""
+    };
+}
+
+async function writeReceiptRecord(payload) {
+    const receiptRef = doc(db, "receipts", payload.receiptId);
+    const authSnapshot = getAuthSnapshot();
+    const businessDate = payload.receiptId.split("-")[0];
+
+    await setDoc(receiptRef, {
+        receiptId: payload.receiptId,
+        businessDate,
+        printedAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
+        storeName: payload.storeName,
+        address: payload.address,
+        phone: payload.phone,
+        dateLabel: payload.date,
+        subtotal: payload.subtotal,
+        tax: payload.tax,
+        total: payload.total,
+        cash: payload.cash,
+        change: payload.change,
+        footer: payload.footer,
+        items: payload.items.map((item) => ({
+            productId: item.productId || "",
+            qty: item.qty,
+            quantity: item.quantity,
+            name: item.name,
+            unitPrice: item.unitPrice,
+            price: item.price
+        })),
+        printer: {
+            serviceUrl: PRINT_SERVICE_URL,
+            mode: "raw-thai-255"
+        },
+        cashier: authSnapshot
+    });
+}
+
+async function finalizePrintedSale(context) {
+    await writeReceiptRecord(context.payload);
+    await decrementInventoryAfterSale(context.soldItems);
+}
+
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 async function completeSale() {
     if (saleInFlight) {
         return;
@@ -305,6 +462,7 @@ async function completeSale() {
     }
 
     saleInFlight = true;
+<<<<<<< HEAD
     const soldItems = cart.map((item) => ({ id: item.id, qty: item.qty }));
     const originalText = checkoutBtn.innerHTML;
 
@@ -333,6 +491,52 @@ async function completeSale() {
         setServiceStatus(
             "error",
             inventoryFailure ? "Inventory Update Failed" : "Print Failed",
+=======
+    const originalText = checkoutBtn.innerHTML;
+
+    try {
+        let context = pendingPrintedSale;
+
+        if (!context) {
+            const receiptId = await reserveReceiptId();
+            const payload = buildReceiptPayload(receiptId);
+            const soldItems = cart.map((item) => ({ id: item.id, qty: item.qty }));
+
+            setServiceStatus("printing", "Printing Receipt", `Printing receipt ${receiptId}.`);
+            checkoutBtn.disabled = true;
+            checkoutBtn.innerHTML = '<span class="btn-icon">...</span> Printing Receipt';
+
+            await sendPrintRequest(payload);
+            context = { receiptId, payload, soldItems };
+            pendingPrintedSale = context;
+        } else {
+            setServiceStatus(
+                "printing",
+                "Saving Printed Sale",
+                `Receipt ${context.receiptId} already printed. Finishing Firestore save and inventory update.`
+            );
+            checkoutBtn.disabled = true;
+            checkoutBtn.innerHTML = '<span class="btn-icon">...</span> Saving Sale';
+        }
+
+        await finalizePrintedSale(context);
+
+        pendingPrintedSale = null;
+        cart = [];
+        setServiceStatus("ready", "Print Service Ready", `Receipt ${context.receiptId} printed and sale saved.`);
+        updateCartUI();
+        alert(`Receipt ${context.receiptId} printed and sale completed.`);
+    } catch (error) {
+        console.warn("Complete sale failed:", error);
+        const printedAlready = Boolean(pendingPrintedSale);
+        const errorMessage = printedAlready
+            ? `${error.message || "Sale save failed."} Receipt already printed. Retry to finish saving without reprinting.`
+            : (error.message || "Could not complete the sale.");
+
+        setServiceStatus(
+            "error",
+            printedAlready ? "Sale Save Failed" : "Print Failed",
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
             errorMessage
         );
         alert(errorMessage);
@@ -351,7 +555,11 @@ async function decrementInventoryAfterSale(soldItems) {
         await runTransaction(db, async (transaction) => {
             const snap = await transaction.get(productRef);
             if (!snap.exists()) {
+<<<<<<< HEAD
                 throw new Error("Printed receipt, but inventory update failed because an item was missing.");
+=======
+                throw new Error("Inventory update failed because a product was missing.");
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
             }
 
             const currentQty = Math.max(0, Math.floor(Number(snap.data().stockQty) || 0));
