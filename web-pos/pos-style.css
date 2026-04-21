@@ -7,7 +7,6 @@
     --card-radius: 20px;
     --border: #e2e8f0;
     --bg-panel: #ffffff;
-    --pulse-color: rgba(239, 68, 68, 0.35);
 }
 
 * {
@@ -17,7 +16,7 @@
 }
 
 body {
-    font-family: 'Google Sans', 'Inter', 'Prompt', sans-serif;
+    font-family: "Google Sans", "Inter", "Prompt", sans-serif;
     background-color: var(--bg-light-blue);
     color: var(--text-dark);
     min-height: 100vh;
@@ -29,7 +28,6 @@ body {
     margin: 0 auto;
 }
 
-/* Top navigation, matching dashboard language */
 .top-nav {
     display: flex;
     justify-content: space-between;
@@ -41,18 +39,6 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-}
-
-.logo-box {
-    background: white;
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary-blue);
-    box-shadow: var(--card-shadow);
 }
 
 .logo-text h1 {
@@ -147,7 +133,6 @@ body {
     transform: translateY(-1px);
 }
 
-/* Main 3-column layout */
 .main-content {
     display: grid;
     grid-template-columns: 280px 1fr 360px;
@@ -310,7 +295,11 @@ body {
     color: var(--text-muted);
 }
 
-.empty-cart img { width: 80px; opacity: 0.3; margin-bottom: 16px; }
+.empty-cart img {
+    width: 80px;
+    opacity: 0.3;
+    margin-bottom: 16px;
+}
 
 .cart-item {
     display: flex;
@@ -347,6 +336,16 @@ body {
     font-size: 1.2rem;
 }
 
+<<<<<<< HEAD
+=======
+.checkout-note {
+    margin: -4px 0 14px;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+}
+
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 .btn-checkout {
     width: 100%;
     background-color: var(--primary-blue);
@@ -364,7 +363,15 @@ body {
     transition: transform 0.2s, opacity 0.2s;
 }
 
+<<<<<<< HEAD
 .btn-checkout:disabled { opacity: 0.5; cursor: not-allowed; }
+=======
+.btn-checkout:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+>>>>>>> 08d4f41 (Implement silent print service and receipt storage)
 .btn-checkout:hover:not(:disabled) {
     opacity: 0.94;
     transform: translateY(-1px);
